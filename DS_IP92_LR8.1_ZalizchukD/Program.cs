@@ -16,12 +16,8 @@ namespace DS_IP92_LR8._1_ZalizchukD
 
     class Graph
     {
-        private int n, m;
-        private int[,] weight;
-        private int[,] distances;
-        private int[,] history;
-        private bool dijkstraFlag = true;
-        private bool floydFlag = true;
+        private int n, m, istok, stok;
+        private int[,] weight, powers;
 
         public Graph(string info)
         {
@@ -32,6 +28,7 @@ namespace DS_IP92_LR8._1_ZalizchukD
             n = Convert.ToInt32(temp[0]);
             m = Convert.ToInt32(temp[1]);
             weight = new int[n, n];
+            powers = new int[n, 2];
 
             int a, b; // Начальная и конечная вершина ребра
             for (int i = 0; i < m; i++)
@@ -42,8 +39,33 @@ namespace DS_IP92_LR8._1_ZalizchukD
                 b = Convert.ToInt32(temp[1]) - 1;
                 weight[a, b] = Convert.ToInt32(temp[2]);
             }
-
+            
+            IstokStok();
             sr.Close();
+        }
+
+        private void IstokStok()
+        {
+            for (int i = 0; i < weight.GetLength(0); i++)
+            {
+                for (int j = 0; j < weight.GetLength(1); j++)
+                {
+                    if (weight[i, j] != 0)
+                    {
+                        powers[i, 0]++; // полустепень выхода
+                        powers[j, 1]++; // полустепень захода
+                    }
+                }
+            }
+
+            for (int i = 0; i < powers.GetLength(0); i++)
+            {
+                if (powers[i, 1] == 0 && powers[i, 0] != 0)
+                    istok = i;
+                if (powers[i, 0] == 0 && powers[i, 1] != 0)
+                    stok = i;
+            }
+
         }
 
         public void WeightOutput()
